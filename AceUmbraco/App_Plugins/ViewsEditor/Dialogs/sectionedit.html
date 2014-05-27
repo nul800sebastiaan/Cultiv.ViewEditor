@@ -1,0 +1,41 @@
+﻿<div class="umb-panel" ng-controller="Cultiv.ViewsEditor.Sections">
+    <div class="umb-modalcolumn-header">
+        <h4>Insert section</h4>
+    </div>
+
+    <div class="umb-panel-body with-header with-footer" ng-hide="dialogData.layout">
+
+        <label for="name">Section name</label>
+        <input name="name" id="name" data-ng-model="dialogData.sectionName" type="text" />
+        <br />
+
+        <label for="section-required" style="display: inline-block; margin-left: 5px;">Has to be implemented?</label>
+        <input style="float: left;" name="section-required" id="section-required" data-ng-model="dialogData.sectionRequired" type="checkbox" />
+
+
+    </div>
+
+    <div class="umb-panel-body with-header with-footer" ng-hide="!dialogData.layout">
+
+        <label for="name">Implement section:</label>
+        <select data-ng-model="dialogData.sectionName">
+            <option ng-repeat="section in dialogData.sections" value="{{section.Name}}">{{section.Name}} {{section.RequiredText}}</option>
+        </select>
+    </div>
+
+    <div class="umb-panel-footer">
+        <div class="umb-el-wrap umb-panel-buttons">
+            <div class="btn-toolbar umb-btn-toolbar pull-right">
+
+                <a href data-ng-click="close()" class="btn btn-link">
+                    <localize key="general_cancel">Cancel</localize>
+                </a>
+
+                <button class="btn btn-primary" data-ng-click="submit(dialogData)">
+                    <localize key="buttons_save">Save</localize>
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>

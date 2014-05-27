@@ -1,0 +1,23 @@
+﻿<style type="text/css" media="screen">
+    .ace-editor-item {
+        position: absolute;
+        top: 30px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+
+<div ng-controller="Cultiv.ViewsEditor">
+    <i class="medium icon-umb-developer" title="Insert Macro" ng-click="insertMacro()"></i>
+    <i class="medium red icon-umb-developer" title="Render section" ng-click="renderSection()" ng-hide="layout"></i>
+    <i class="medium red icon-umb-developer" title="Render section" ng-click="implementSection()" ng-hide="!layout"></i>
+    <i class="medium blue icon-umb-developer" title="Render section" ng-click="renderBody()" ng-hide="layout"></i>
+    
+    <button type="submit" data-hotkey="ctrl+s" class="btn btn-success pull-right" ng-click="saveView()">
+        <localize key="buttons_save" class="ng-isolate-scope ng-scope">Save</localize>
+    </button>
+        
+    
+    <div class="ace-editor-item" ng-model="contents"></div>
+</div>

@@ -1,0 +1,57 @@
+@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@using Umbraco.Course.Level2
+@{
+    var numberOfItems = Model.MacroParameters.GetValue("numberOfItems", 10); // extension method
+    var statusUpdates = Model.Content.AncestorOrSelf("homePage").Descendants("statusUpdate").OrderByDescending(statusUpdate => statusUpdate.Id).Take(numberOfItems);
+}
+<h3>Recent status updates</h3>
+<div id="stream">
+    @foreach (var statusUpdate in statusUpdates)
+    {
+        <div id="status@(statusUpdate.Id)">
+            
+            @if (statusUpdate.HasValue("memberId"))
+            {
+                
+                var member = Umbraco.TypedMember(statusUpdate.GetPropertyValue<int>("memberId"));
+                if (member.HasValue("avatar"))
+                {
+                    <p>
+                        <img src="@(member.GetPropertyValue<string>("avatar"))?width=100" alt="@member.Name" />
+                    </p>
+                }
+            }
+            <p class="status-update">
+                @Umbraco.StripHtml(statusUpdate.GetPropertyValue<string>("bodyText"))
+            </p>
+        
+                <p>
+                    <a data-status-id="@statusUpdate.Id"><i class="glyphicon glyphicon-thumbs-up"></i> like</a> <span class="likes">@(statusUpdate.GetPropertyValue<int>("likes"))</span> likes.
+                </p>
+                <p>
+                    <strong>Published:</strong> <em>@statusUpdate.CreateDate</em>
+                </p>
+                <!-- Files go here -->
+                <ul class="files thumbnails">
+                    @if (statusUpdate.HasValue("mediaFolder"))
+                    {
+                        var media = Umbraco.Media(statusUpdate.GetPropertyValue<string>("mediaFolder"));
+                        foreach (var item in media.Children())
+                        {
+                        <li>
+                            <a href="@item.umbracoFile">
+                                <img src="@item.umbracoFile" />
+                            </a>
+                        </li>  
+                        }
+                    }
+
+                </ul>
+                <div style="clear:both"></div>
+        </div>
+    }
+</div>
+<hr/>
+<div class="alert alert-info">
+    <em>Umbraco Macro Rendered at @DateTime.Now, Displaying @numberOfItems items</em> 
+</div>

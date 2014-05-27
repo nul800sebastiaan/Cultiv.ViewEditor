@@ -1,0 +1,56 @@
+@inherits UmbracoTemplatePage
+@{
+    Layout = "umbLayout.cshtml";
+}
+
+
+@{ Html.RenderPartial("umbHomepageBanner"); }
+
+
+<!-- Main -->
+<div id="main-wrapper">
+    <div id="main" class="container">
+        <div class="row">
+            <div class="12u">
+                @{ Html.RenderPartial("umbFeatures"); }
+            </div>
+        </div>
+        <div class="row">
+            <div class="12u">
+                @{   Html.RenderPartial("umbNewsOverviewWidget"); }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Main -->
+
+@Umbraco.RenderMacro("RegisterMember", new { test="Hello", test2="5" })
+
+@section Footer { 
+
+   <!-- Footer -->
+    <footer id="footer" class="container">
+        <div class="row">
+            <div class="12u">
+                @{ Html.RenderPartial("umbAbout"); }
+            </div>
+        </div>
+        <div class="row">
+            <div class="12u">
+                @{ Html.RenderPartial("umbSocial"); }
+            </div>
+        </div>
+        <div class="row">
+            <!-- Copyright -->
+            <div id="copyright">
+                &copy; @DateTime.Now.Year @Umbraco.Field("copyright", recursive: true) | Images: <a href="http://fotogrph.com">fotogrph</a> + <a href="http://iconify.it">Iconify.it</a> | Design: <a href="http://html5up.net/">HTML5 UP</a>
+            </div>
+            <!-- /Copyright -->
+        </div>
+    </footer>
+    
+}
+
+
+
+

@@ -1,0 +1,20 @@
+﻿<div class="umb-dialog-body with-footer">
+    <div class="umb-pane">
+        <h5><localize key="create_createUnder">Create something under </localize> {{currentNode.name}}</h5>
+
+        <ul class="umb-actions umb-actions-child">
+            <li>
+                <a href="#/ViewsEditor/ViewsEditorTree/edit/dashboard?create=true&type=view" ng-click="nav.hideNavigation()">
+                    <i class="large icon-document"></i>
+                    <span class="menu-label">View</span>
+                </a>
+            </li>
+            <li>
+                <a href="#/ViewsEditor/ViewsEditorTree/edit/dashboard?create=true&type=folder" ng-click="nav.hideNavigation()">
+                    <i class="large icon-folder"></i>
+                    <span class="menu-label">Folder</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
