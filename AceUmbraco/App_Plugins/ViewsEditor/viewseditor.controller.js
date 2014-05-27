@@ -85,12 +85,25 @@
                    };
 
                    $scope.renderSectionConfirm = function (dialogData) {
-                       var required = "false";
+                       var required = false;
                        if (dialogData.sectionRequired !== undefined) {
-                           required = "true";
+                           required = true;
                        }
 
-                       var sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\", " + required + ")";
+                       var sectionCode = "";
+
+                       if (required) {
+                           sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\")";
+                       }
+
+                       if (required === false && dialogData.alternativeContent !== undefined && dialogData.alternativeContent !== "") {
+                           sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\", \"" + dialogData.alternativeContent + "\")";
+                       }
+
+                       if (required === false && (dialogData.alternativeContent === undefined || dialogData.alternativeContent === "")) {
+                           sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\", false)";
+                       }
+                       
                        editor.insert(sectionCode);
                    }
 

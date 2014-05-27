@@ -11,8 +11,11 @@
 
         <label for="section-required" style="display: inline-block; margin-left: 5px;">Has to be implemented?</label>
         <input style="float: left;" name="section-required" id="section-required" data-ng-model="dialogData.sectionRequired" type="checkbox" />
-
-
+        
+        <div ng-hide="dialogData.sectionRequired">
+            <label for="name">Alternative content if not implemented</label>
+            <textarea id="alternative-content" data-ng-model="dialogData.alternativeContent"></textarea>
+        </div>
     </div>
 
     <div class="umb-panel-body with-header with-footer" ng-hide="!dialogData.layout">
