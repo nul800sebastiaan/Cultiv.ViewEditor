@@ -68,8 +68,13 @@ namespace AceUmbraco.Controllers
         protected override MenuItemCollection GetMenuForNode(string id, FormDataCollection queryStrings)
         {
             var menu = new MenuItemCollection();
-            menu.Items.Add<ActionNew>("Create");
+            if (id.EndsWith(".cshtml") == false)
+            {
+                menu.Items.Add<ActionNew>("Create");
+            }
+
             menu.Items.Add<RefreshNode, ActionRefresh>(ui.Text("actions", ActionRefresh.Instance.Alias), true);
+
             return menu;
         }
     }
