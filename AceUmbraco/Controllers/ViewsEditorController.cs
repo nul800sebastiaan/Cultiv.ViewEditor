@@ -29,17 +29,19 @@ namespace AceUmbraco.Controllers
 
             var contents = GetViewContents(path);
 
-            var layout = GetLayout(contents);
+            var currentLayout = GetLayout(contents);
+            var layouts = currentLayout;
 
             var sections = new List<Section>();
 
-            if (layout != null)
+            while (layouts != null)
             {
-                var layoutContents = GetViewContents(layout);
+                var layoutContents = GetViewContents(layouts);
                 sections = GetSections(layoutContents).OrderBy(x => x.Name).ToList();
+                layouts = GetLayout(layoutContents);
             }
 
-            return new ViewFile { Value = contents, FileName = path, Layout = layout, Sections = sections };
+            return new ViewFile { Value = contents, FileName = path, Layout = currentLayout, Sections = sections };
         }
 
         private static string GetViewContents(string path)
