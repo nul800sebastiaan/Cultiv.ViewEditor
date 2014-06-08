@@ -8,11 +8,10 @@
     }
 </style>
 <div ng-controller="Cultiv.ViewsEditor">
-
     <div class="umb-panel-header">
         <div class="row-fluid">
             <div class="span7">
-                <h1>Edit {{ 'filename' }}</h1>
+                <umb-content-name placeholder="@placeholders_entername" ng-model="filename" />
             </div>
 
             <div class="span5">

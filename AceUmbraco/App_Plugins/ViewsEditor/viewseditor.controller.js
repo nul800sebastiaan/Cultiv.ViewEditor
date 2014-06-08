@@ -2,131 +2,139 @@
 
     angular.forEach($element.find('.ace-editor-item'), function (element) {
         $http.get("/umbraco/backoffice/api/ViewsEditor/GetByPath/?path=" + $routeParams.id)
-               .then(function (response) {
+            .then(function (response) {
 
-                   var contents = response.data.Value;
-                   $scope.contents = contents;
-                   $scope.layout = response.data.Layout;
-                   $scope.sections = response.data.Sections;
+                var contents = response.data.Value;
+                $scope.contents = contents;
+                $scope.layout = response.data.Layout;
+                $scope.sections = response.data.Sections;
+                $scope.filename = $routeParams.id;
+                
+                var editor = ace.edit(element);
 
-                   var editor = ace.edit(element);
+                editor.getSession().setMode("ace/mode/html");
+                editor.setValue($scope.contents);
+                editor.gotoLine(1);
 
-                   editor.getSession().setMode("ace/mode/html");
-                   editor.setValue($scope.contents);
-                   editor.gotoLine(1);
-
-                   editor.getSession().on('change', function () {
-                       $scope.contents = editor.getSession().getValue();
-                   });
+                editor.getSession().on('change', function () {
+                    $scope.contents = editor.getSession().getValue();
+                });
 
 
-                   $scope.insertMacro = function () {
-                       dialogService.macroPicker({ scope: $scope, callback: renderMacro });
-                   }
+                $scope.insertMacro = function () {
+                    dialogService.macroPicker({ scope: $scope, callback: renderMacro });
+                }
 
-                   $scope.saveView = function () {
-                       var jsonContents = angular.toJson($scope.contents);
+                $scope.saveView = function () {
+                    var jsonContents = angular.toJson($scope.contents);
 
-                       $http.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+                    $http.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
 
-                       var data = $.param({
-                           "FileName": $routeParams.id,
-                           "Value": jsonContents
-                       });
+                    var parent = "";
+                    if ($routeParams.create) {
+                        parent = $routeParams.id;
+                    }
 
-                       $http.put("/umbraco/backoffice/api/ViewsEditor/PutSaveView/", data)
-                       .error(function () {
-                           notificationsService.error("Something went wrong! Check your log in App_Data\Logs");
-                       })
-                       .success(function () {
-                           notificationsService.success("View saved");
-                       });
-                   }
+                    var data = $.param({
+                        "FileName": $routeParams.id,
+                        "NewFileName": $scope.filename,
+                        "Parent": parent,
+                        "Value": jsonContents
+                    });
 
-                   function renderMacro(data) {
-                       var macroProperties = 0;
-                       var macroPropertiesString = "";
+                    $http.put("/umbraco/backoffice/api/ViewsEditor/PutSaveView/", data)
+                        .error(function () {
+                            notificationsService.error("Something went wrong! Check your log in App_Data\Logs");
+                        })
+                        .success(function () {
+                            notificationsService.success("View saved");
+                        });
+                }
 
-                       for (var key in data.macroParamsDictionary) {
-                           macroProperties = macroProperties + 1;
-                           var propertyValue = data.macroParamsDictionary[key];
+                function renderMacro(data) {
+                    var macroProperties = 0;
+                    var macroPropertiesString = "";
 
-                           if (macroProperties > 1) {
-                               macroPropertiesString = macroPropertiesString + ", ";
-                           }
+                    for (var key in data.macroParamsDictionary) {
+                        macroProperties = macroProperties + 1;
+                        var propertyValue = data.macroParamsDictionary[key];
 
-                           var value;
-                           if (propertyValue === "null") {
-                               value = "=\"" + "\"";
-                           } else {
-                               value = "=\"" + propertyValue + "\"";
-                           }
+                        if (macroProperties > 1) {
+                            macroPropertiesString = macroPropertiesString + ", ";
+                        }
 
-                           macroPropertiesString = macroPropertiesString + key + value;
-                       }
+                        var value;
+                        if (propertyValue === "null") {
+                            value = "=\"" + "\"";
+                        } else {
+                            value = "=\"" + propertyValue + "\"";
+                        }
 
-                       var macroCode;
-                       if (macroProperties === 0) {
-                           macroCode = "@Umbraco.RenderMacro(\"" + data.macroAlias + "\")";
-                       } else {
-                           macroCode = "@Umbraco.RenderMacro(\"" + data.macroAlias + "\", new { " + macroPropertiesString + " })";
-                       }
+                        macroPropertiesString = macroPropertiesString + key + value;
+                    }
 
-                       editor.insert(macroCode);
-                   }
+                    var macroCode;
+                    if (macroProperties === 0) {
+                        macroCode = "@Umbraco.RenderMacro(\"" + data.macroAlias + "\")";
+                    } else {
+                        macroCode = "@Umbraco.RenderMacro(\"" + data.macroAlias + "\", new { " + macroPropertiesString + " })";
+                    }
 
-                   $scope.renderSection = function () {
-                       dialogService.open({
-                           template: "/App_Plugins/ViewsEditor/Dialogs/sectionedit.html",
-                           show: true,
-                           dialogData: { layout: $scope.layout },
-                           callback: $scope.renderSectionConfirm
-                       });
-                   };
+                    editor.insert(macroCode);
+                }
 
-                   $scope.renderSectionConfirm = function (dialogData) {
-                       var required = false;
-                       if (dialogData.sectionRequired !== undefined) {
-                           required = true;
-                       }
+                $scope.renderSection = function () {
+                    dialogService.open({
+                        template: "/App_Plugins/ViewsEditor/Dialogs/sectionedit.html",
+                        show: true,
+                        dialogData: { layout: $scope.layout },
+                        callback: $scope.renderSectionConfirm
+                    });
+                };
 
-                       var sectionCode = "";
+                $scope.renderSectionConfirm = function (dialogData) {
+                    var required = false;
+                    if (dialogData.sectionRequired !== undefined) {
+                        required = true;
+                    }
 
-                       if (required) {
-                           sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\")";
-                       }
+                    var sectionCode = "";
 
-                       if (required === false && dialogData.alternativeContent !== undefined && dialogData.alternativeContent !== "") {
-                           sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\", \"" + dialogData.alternativeContent + "\")";
-                       }
+                    if (required) {
+                        sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\")";
+                    }
 
-                       if (required === false && (dialogData.alternativeContent === undefined || dialogData.alternativeContent === "")) {
-                           sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\", false)";
-                       }
-                       
-                       editor.insert(sectionCode);
-                   }
+                    if (required === false && dialogData.alternativeContent !== undefined && dialogData.alternativeContent !== "") {
+                        sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\", \"" + dialogData.alternativeContent + "\")";
+                    }
 
-                   $scope.implementSection = function () {
-                       for (var section in $scope.sections) {
-                           $scope.sections[section].RequiredText = $scope.sections[section].Required === true ? "(required)" : "";
-                       }
-                       dialogService.open({
-                           template: "/App_Plugins/ViewsEditor/Dialogs/sectionedit.html",
-                           show: true,
-                           dialogData: { layout: $scope.layout, sections: $scope.sections },
-                           callback: $scope.implementSectionConfirm
-                       });
-                   };
+                    if (required === false && (dialogData.alternativeContent === undefined || dialogData.alternativeContent === "")) {
+                        sectionCode = "@RenderSection(\"" + dialogData.sectionName + "\", false)";
+                    }
 
-                   $scope.implementSectionConfirm = function (dialogData) {
-                       var sectionCode = "@section " + dialogData.sectionName + " { \n\t@* Implement the section here *@ \n}";
-                       editor.insert(sectionCode);
-                   }
+                    editor.insert(sectionCode);
+                }
 
-                   $scope.renderBody = function () {
-                       editor.insert("@RenderBody()");
-                   }
-               });
+                $scope.implementSection = function () {
+                    for (var section in $scope.sections) {
+                        $scope.sections[section].RequiredText = $scope.sections[section].Required === true ? "(required)" : "";
+                    }
+                    dialogService.open({
+                        template: "/App_Plugins/ViewsEditor/Dialogs/sectionedit.html",
+                        show: true,
+                        dialogData: { layout: $scope.layout, sections: $scope.sections },
+                        callback: $scope.implementSectionConfirm
+                    });
+                };
+
+                $scope.implementSectionConfirm = function (dialogData) {
+                    var sectionCode = "@section " + dialogData.sectionName + " { \n\t@* Implement the section here *@ \n}";
+                    editor.insert(sectionCode);
+                }
+
+                $scope.renderBody = function () {
+                    editor.insert("@RenderBody()");
+                }
+            });
     });
 });

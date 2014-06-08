@@ -15,8 +15,13 @@ namespace AceUmbraco.Controllers
     {
         public ViewFile GetByPath(string path)
         {
-            var contents = GetViewContents(path);
+            if (path == "-1" || path.EndsWith(".cshtml") == false)
+            {
+                return new ViewFile { Value = "", FileName = path, Layout = null, Sections = null };
+            }
 
+            var contents = GetViewContents(path);
+            
             var layout = GetLayout(contents);
 
             var sections = new List<Section>();
@@ -49,13 +54,38 @@ namespace AceUmbraco.Controllers
         {
             var ct = JsonConvert.DeserializeObject<string>(view.Value);
 
+            if (view.Parent != null)
+            {
+                view.FileName = Path.Combine(view.Parent, view.NewFileName);
+            }
+
+            var filenameChanged = view.FileName.ToLowerInvariant() != view.NewFileName.ToLowerInvariant();
+
+            if (filenameChanged && File.Exists(HttpContext.Current.Request.MapPath("~/Views/" + view.NewFileName)))
+            {
+                return new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError);
+            }
+            
+            if (filenameChanged && (view.FileName == "-1" || (view.FileName.IsValidViewFile() && view.NewFileName.IsValidViewFile())))
+            {
+                using (var streamWriter = new StreamWriter(HttpContext.Current.Request.MapPath("~/Views/" + view.NewFileName), false))
+                {
+                    streamWriter.WriteLine(ct); // Write the text
+                }
+                
+                // If new file was successfully written, delete the old one
+                // TODO: sync tree here?
+                if (File.Exists(HttpContext.Current.Request.MapPath("~/Views/" + view.NewFileName)))
+                {
+                    File.Delete(HttpContext.Current.Request.MapPath("~/Views/" + view.FileName));
+                }
+            }
+
             if (view.FileName.IsValidViewFile())
             {
-                var file = new FileInfo(HttpContext.Current.Request.MapPath("~/Views/" + view.FileName));
-
-                using (var viewFile = new StreamWriter(file.FullName, false))
+                using (var streamWriter = new StreamWriter(HttpContext.Current.Request.MapPath("~/Views/" + view.FileName), false))
                 {
-                    viewFile.WriteLine(ct);
+                    streamWriter.WriteLine(ct); // Write the text
                 }
             }
 
@@ -120,6 +150,8 @@ namespace AceUmbraco.Controllers
     {
         public string Value { get; set; }
         public string FileName { get; set; }
+        public string NewFileName { get; set; }
+        public string Parent { get; set; }
         public string Layout { get; set; }
         public List<Section> Sections { get; set; }
     }
