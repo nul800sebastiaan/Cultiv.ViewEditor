@@ -209,6 +209,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Plugins\ViewsEditor\BackOffice\ViewsEditorTree\delete.html" />
     <Content Include="App_Plugins\ViewsEditor\Dialogs\sectionedit.html" />
     <Content Include="App_Plugins\ViewsEditor\viewseditor.controller.js" />
     <Content Include="App_Plugins\ViewsEditor\BackOffice\ViewsEditorTree\create.html" />
@@ -530,6 +531,8 @@
     <Content Include="config\applications.config" />
     <Content Include="config\404handlers.config" />
     <Content Include="App_Plugins\ViewsEditor\package.manifest" />
+    <Content Include="App_Plugins\ViewsEditor\viewseditor.dialog.delete.controller.js" />
+    <Content Include="App_Plugins\ViewsEditor\viewseditor.resource.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

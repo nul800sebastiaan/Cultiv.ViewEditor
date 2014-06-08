@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using Newtonsoft.Json;
 using Umbraco.Web.WebApi;
@@ -56,6 +58,26 @@ namespace AceUmbraco.Controllers
             }
             return contents;
         }
+
+        [HttpPost]
+        public HttpResponseMessage PostDeleteByPath(dynamic model)
+        {
+            //Get the path to the file
+            var filePath = Path.Combine(HostingEnvironment.MapPath("~/views/"), model.path.ToString());
+
+            //Check file exists on disk - & hasn't been removed on disk by user
+            if (File.Exists(filePath))
+            {
+                //Delete the file
+                File.Delete(filePath);
+
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+
+            //File does not exist
+            return Request.CreateResponse(HttpStatusCode.NotFound);
+        }
+
 
         public HttpResponseMessage PutSaveView([FromBody]ViewFile view)
         {

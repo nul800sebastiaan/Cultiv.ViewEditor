@@ -72,8 +72,15 @@ namespace AceUmbraco.Controllers
             {
                 menu.Items.Add<ActionNew>("Create");
             }
+            else
+            {
+                // When clicking delete - it expects this default view
+                // /App_Plugins/ViewsEditor/backoffice/ViewsEditorTree/delete.html
+                menu.Items.Add<ActionDelete>("Delete");
+            }
 
             menu.Items.Add<RefreshNode, ActionRefresh>(ui.Text("actions", ActionRefresh.Instance.Alias), true);
+
 
             return menu;
         }
