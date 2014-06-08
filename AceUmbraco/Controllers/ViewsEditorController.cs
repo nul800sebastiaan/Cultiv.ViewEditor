@@ -17,7 +17,14 @@ namespace AceUmbraco.Controllers
         {
             if (path == "-1" || path.EndsWith(".cshtml") == false)
             {
-                return new ViewFile { Value = "", FileName = path, Layout = null, Sections = null };
+                var scaffold = "@inherits UmbracoTemplatePage\r{\r\t// Specify a layout here\r\t// @Layout = \"Something.cshtml\"; \r}\r";
+
+                if (path.ToLowerInvariant().StartsWith("MacroPartials".ToLowerInvariant()))
+                {
+                    scaffold = "@inherits Umbraco.Web.Macros.PartialViewMacroPage\r";
+                }
+
+                return new ViewFile { Value = scaffold, FileName = path, Layout = null, Sections = null };
             }
 
             var contents = GetViewContents(path);
