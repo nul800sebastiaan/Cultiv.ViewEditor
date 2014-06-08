@@ -9,6 +9,7 @@
                 $scope.layout   = response.data.Layout;
                 $scope.sections = response.data.Sections;
                 $scope.filename = $routeParams.id;
+                $scope.create = $routeParams.create;
                 
                 //Create our ace editor
                 var editor = ace.edit(element);
@@ -40,15 +41,18 @@
 
                     $http.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
 
+                    var isNew = $scope.create;
                     var parent = "";
-                    if ($routeParams.create) {
+                    if ($scope.create) {
                         parent = $routeParams.id;
+                        isNew = true;
                     }
 
                     var data = $.param({
                         "FileName": $routeParams.id,
                         "NewFileName": $scope.filename,
                         "Parent": parent,
+                        "IsNew": isNew,
                         "Value": jsonContents
                     });
 
@@ -57,6 +61,8 @@
                             notificationsService.error("Something went wrong! Check your log in App_Data\Logs");
                         })
                         .success(function () {
+                            $scope.create = false;
+                            $routeParams.id = $scope.filename;
                             notificationsService.success("View saved");
                         });
                 }

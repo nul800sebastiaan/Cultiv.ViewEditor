@@ -28,7 +28,7 @@ namespace AceUmbraco.Controllers
             }
 
             var contents = GetViewContents(path);
-            
+
             var layout = GetLayout(contents);
 
             var sections = new List<Section>();
@@ -50,7 +50,7 @@ namespace AceUmbraco.Controllers
             {
                 var file = new FileInfo(HttpContext.Current.Request.MapPath("~/Views/" + path));
                 using (var reader = new StreamReader(file.FullName))
-                { 
+                {
                     contents = reader.ReadToEnd();
                 }
             }
@@ -61,14 +61,9 @@ namespace AceUmbraco.Controllers
         {
             var ct = JsonConvert.DeserializeObject<string>(view.Value);
 
-            if (view.Parent != null)
+            if (view.IsNew)
             {
-                view.FileName = Path.Combine(view.Parent, view.NewFileName);
-            }
-
-            if (view.FileName.StartsWith("-1"))
-            {
-                view.FileName = view.FileName.Replace("-1\\", string.Empty);
+                view.FileName = view.NewFileName;
             }
 
             var filenameChanged = view.FileName.ToLowerInvariant() != view.NewFileName.ToLowerInvariant();
@@ -77,14 +72,14 @@ namespace AceUmbraco.Controllers
             {
                 return new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError);
             }
-            
-            if (filenameChanged && (view.FileName == "-1" || (view.FileName.IsValidViewFile() && view.NewFileName.IsValidViewFile())))
+
+            if (filenameChanged && view.FileName.IsValidViewFile() && view.NewFileName.IsValidViewFile())
             {
                 using (var streamWriter = new StreamWriter(HttpContext.Current.Request.MapPath("~/Views/" + view.NewFileName), false))
                 {
                     streamWriter.WriteLine(ct); // Write the text
                 }
-                
+
                 // If new file was successfully written, delete the old one
                 // TODO: sync tree here?
                 if (view.FileName.StartsWith("-1") == false && view.FileName.IsValidViewFile() && File.Exists(HttpContext.Current.Request.MapPath("~/Views/" + view.NewFileName)))
@@ -95,7 +90,9 @@ namespace AceUmbraco.Controllers
 
             if (view.FileName.IsValidViewFile())
             {
-                using (var streamWriter = new StreamWriter(HttpContext.Current.Request.MapPath("~/Views/" + view.FileName), false))
+                var file = filenameChanged ? view.NewFileName : view.FileName;
+
+                using (var streamWriter = new StreamWriter(HttpContext.Current.Request.MapPath("~/Views/" + file), false))
                 {
                     streamWriter.WriteLine(ct); // Write the text
                 }
@@ -144,7 +141,7 @@ namespace AceUmbraco.Controllers
                 var sectionRequired = true;
                 if (splitValues.Length > 1)
                     bool.TryParse(splitValues[1], out sectionRequired);
-                
+
                 sections.Add(new Section { Name = sectionName, Required = sectionRequired });
             }
 
@@ -164,6 +161,7 @@ namespace AceUmbraco.Controllers
         public string FileName { get; set; }
         public string NewFileName { get; set; }
         public string Parent { get; set; }
+        public bool IsNew { get; set; }
         public string Layout { get; set; }
         public List<Section> Sections { get; set; }
     }
