@@ -66,6 +66,11 @@ namespace AceUmbraco.Controllers
                 view.FileName = Path.Combine(view.Parent, view.NewFileName);
             }
 
+            if (view.FileName.StartsWith("-1"))
+            {
+                view.FileName = view.FileName.Replace("-1\\", string.Empty);
+            }
+
             var filenameChanged = view.FileName.ToLowerInvariant() != view.NewFileName.ToLowerInvariant();
 
             if (filenameChanged && File.Exists(HttpContext.Current.Request.MapPath("~/Views/" + view.NewFileName)))
@@ -82,7 +87,7 @@ namespace AceUmbraco.Controllers
                 
                 // If new file was successfully written, delete the old one
                 // TODO: sync tree here?
-                if (File.Exists(HttpContext.Current.Request.MapPath("~/Views/" + view.NewFileName)))
+                if (view.FileName.StartsWith("-1") == false && view.FileName.IsValidViewFile() && File.Exists(HttpContext.Current.Request.MapPath("~/Views/" + view.NewFileName)))
                 {
                     File.Delete(HttpContext.Current.Request.MapPath("~/Views/" + view.FileName));
                 }
