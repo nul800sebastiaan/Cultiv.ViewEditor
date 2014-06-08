@@ -1,25 +1,82 @@
 ﻿<style type="text/css" media="screen">
     .ace-editor-item {
         position: absolute;
-        top: 30px;
+        top: 0;
         right: 0;
         bottom: 0;
         left: 0;
     }
 </style>
-
 <div ng-controller="Cultiv.ViewsEditor">
-    <i class="medium icon-paper-plane" title="Insert Page Field" ng-click="insertPageField()"></i>
-    <i class="medium icon-paper-plane-alt" title="Insert Dictionary Item" ng-click="insertDictionaryItem()"></i>
-    <i class="medium icon-umb-developer" title="Insert Macro" ng-click="insertMacro()"></i>
-    <i class="medium icon-checkbox-dotted" title="Render section" ng-click="renderSection()" ng-hide="layout"></i>
-    <i class="medium icon-checkbox" title="Implement section" ng-click="implementSection()" ng-hide="!layout"></i>
-    <i class="medium icon-document-dashed-line" title="Render body" ng-click="renderBody()" ng-hide="layout"></i>
-    
-    <button type="submit" data-hotkey="ctrl+s" class="btn btn-success pull-right" ng-click="saveView()">
-        <localize key="buttons_save" class="ng-isolate-scope ng-scope">Save</localize>
-    </button>
-        
-    
-    <div class="ace-editor-item" ng-model="contents"></div>
+
+    <div class="umb-panel-header">
+        <div class="row-fluid">
+            <div class="span7">
+                <h1>Edit {{ 'filename' }}</h1>
+            </div>
+
+            <div class="span5">
+                <div class="btn-toolbar pull-right umb-btn-toolbar">
+
+                    <div class="btn-group">
+
+                        <!-- Actions button that triggers dropdown -->
+                        <a class="btn" href="#" ng-click="getOptions()" prevent-default data-toggle="dropdown">
+                            <localize key="general_actions">Actions</localize>
+                            <span class="caret"></span>
+                        </a>
+
+                        <!-- Template/View Actions -->
+                        <ul class="dropdown-menu  umb-actions" role="menu" aria-labelledby="dLabel">
+                            <li class="action">
+                                <a href="#" ng-click="insertPageField()" prevent-default>
+                                    <i class="icon icon-layout"></i>
+                                    <span class="menu-label">Insert Page Field</span>
+                                </a>
+                            </li>
+                            <li class="action">
+                                <a href="#" ng-click="insertMacro()" prevent-default>
+                                    <i class="icon icon-script"></i>
+                                    <span class="menu-label">Insert Macro</span>
+                                </a>
+                            </li>
+                            <li class="action">
+                                <a href="#" ng-click="insertDictionaryItem()" prevent-default>
+                                    <i class="icon icon-book-alt-2"></i>
+                                    <span class="menu-label">Insert Dictionary Item</span>
+                                </a>
+                            </li>
+                            <li class="action sep">
+                                <a href="#" ng-click="renderSection()" ng-hide="layout" prevent-default>
+                                    <i class="icon icon-layout"></i>
+                                    <span class="menu-label">Create Render Section</span>
+                                </a>
+                            </li>
+                            <li class="action">
+                                <a href="#" ng-click="implementSection()" ng-hide="!layout" prevent-default>
+                                    <i class="icon icon-layout"></i>
+                                    <span class="menu-label">Insert Section</span>
+                                </a>
+                            </li>
+                            <li class="action">
+                                <a href="#" ng-click="renderBody()" ng-hide="layout" prevent-default>
+                                    <i class="icon icon-layout"></i>
+                                    <span class="menu-label">Render Body</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!-- Save -->
+                        <button type="submit" data-hotkey="ctrl+s" class="btn btn-success pull-right" ng-click="saveView()">
+                            <localize key="buttons_save" class="ng-isolate-scope ng-scope">Save</localize>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="umb-panel-body">
+        <div class="ace-editor-item" ng-model="contents"></div>
+    </div>
 </div>
