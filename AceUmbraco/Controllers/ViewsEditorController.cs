@@ -9,7 +9,11 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using Newtonsoft.Json;
+using Umbraco.Core.Models;
+using Umbraco.Core;
+using Umbraco.Core.Strings;
 using Umbraco.Web.WebApi;
+using File = System.IO.File;
 
 namespace AceUmbraco.Controllers
 {
@@ -43,7 +47,23 @@ namespace AceUmbraco.Controllers
                 layouts = GetLayout(layoutContents);
             }
 
-            return new ViewFile { Value = contents, FileName = path, Layout = currentLayout, Sections = sections };
+            var masterTemplateId = 0;
+
+            var templateName = currentLayout;
+            if (currentLayout.Contains("\\"))
+            {
+                var remove = currentLayout.Substring(0, currentLayout.LastIndexOf("\\", StringComparison.Ordinal));
+                templateName = currentLayout.Replace(remove, string.Empty);
+            }
+
+            if (currentLayout.Contains("\\") == false)
+            {
+                var fileService = Services.FileService;
+                var template = fileService.GetTemplate(templateName.ToCleanString(CleanStringType.UnderscoreAlias));
+                masterTemplateId = template.Id;
+            }
+
+            return new ViewFile { Value = contents, FileName = path, Layout = currentLayout, Sections = sections, MasterTemplateId = masterTemplateId };
         }
 
         private static string GetViewContents(string path)
@@ -58,6 +78,7 @@ namespace AceUmbraco.Controllers
                     contents = reader.ReadToEnd();
                 }
             }
+
             return contents;
         }
 
@@ -88,6 +109,31 @@ namespace AceUmbraco.Controllers
             if (view.IsNew)
             {
                 view.FileName = view.NewFileName;
+            }
+
+            if (view.NewFileName.Contains("\\") == false)
+            {
+                var fs = Services.FileService;
+                var name = view.NewFileName.Replace(".cshtml", string.Empty);
+                var template = fs.GetTemplate(name.ToCleanString(CleanStringType.UnderscoreAlias));
+
+                if (template == null)
+                {
+                    template = new Template(view.FileName, name, name);
+                    fs.SaveTemplate(template);
+                }
+
+                var layout = GetLayout(ct);
+
+                if (layout != null)
+                {
+                    var layoutTemplate = fs.GetTemplate(layout.Replace(".cshtml", string.Empty).ToCleanString(CleanStringType.UnderscoreAlias));
+                    if (layoutTemplate != null)
+                        template.SetMasterTemplate(layoutTemplate);
+                }
+                
+                template.Content = ct;
+                fs.SaveTemplate(template);
             }
 
             var filenameChanged = view.FileName.ToLowerInvariant() != view.NewFileName.ToLowerInvariant();
@@ -187,6 +233,7 @@ namespace AceUmbraco.Controllers
         public string Parent { get; set; }
         public bool IsNew { get; set; }
         public string Layout { get; set; }
+        public int MasterTemplateId { get; set; }
         public List<Section> Sections { get; set; }
     }
 
