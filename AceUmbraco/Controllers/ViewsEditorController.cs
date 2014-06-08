@@ -47,23 +47,7 @@ namespace AceUmbraco.Controllers
                 layouts = GetLayout(layoutContents);
             }
 
-            var masterTemplateId = 0;
-
-            var templateName = currentLayout;
-            if (currentLayout.Contains("\\"))
-            {
-                var remove = currentLayout.Substring(0, currentLayout.LastIndexOf("\\", StringComparison.Ordinal));
-                templateName = currentLayout.Replace(remove, string.Empty);
-            }
-
-            if (currentLayout.Contains("\\") == false)
-            {
-                var fileService = Services.FileService;
-                var template = fileService.GetTemplate(templateName.ToCleanString(CleanStringType.UnderscoreAlias));
-                masterTemplateId = template.Id;
-            }
-
-            return new ViewFile { Value = contents, FileName = path, Layout = currentLayout, Sections = sections, MasterTemplateId = masterTemplateId };
+            return new ViewFile { Value = contents, FileName = path, Layout = currentLayout, Sections = sections };
         }
 
         private static string GetViewContents(string path)
@@ -109,31 +93,6 @@ namespace AceUmbraco.Controllers
             if (view.IsNew)
             {
                 view.FileName = view.NewFileName;
-            }
-
-            if (view.NewFileName.Contains("\\") == false)
-            {
-                var fs = Services.FileService;
-                var name = view.NewFileName.Replace(".cshtml", string.Empty);
-                var template = fs.GetTemplate(name.ToCleanString(CleanStringType.UnderscoreAlias));
-
-                if (template == null)
-                {
-                    template = new Template(view.FileName, name, name);
-                    fs.SaveTemplate(template);
-                }
-
-                var layout = GetLayout(ct);
-
-                if (layout != null)
-                {
-                    var layoutTemplate = fs.GetTemplate(layout.Replace(".cshtml", string.Empty).ToCleanString(CleanStringType.UnderscoreAlias));
-                    if (layoutTemplate != null)
-                        template.SetMasterTemplate(layoutTemplate);
-                }
-                
-                template.Content = ct;
-                fs.SaveTemplate(template);
             }
 
             var filenameChanged = view.FileName.ToLowerInvariant() != view.NewFileName.ToLowerInvariant();
