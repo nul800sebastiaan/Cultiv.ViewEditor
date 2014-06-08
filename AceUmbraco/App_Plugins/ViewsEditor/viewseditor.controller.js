@@ -4,18 +4,28 @@
         $http.get("/umbraco/backoffice/api/ViewsEditor/GetByPath/?path=" + $routeParams.id)
             .then(function (response) {
 
-                var contents = response.data.Value;
+                var contents    = response.data.Value;
                 $scope.contents = contents;
-                $scope.layout = response.data.Layout;
+                $scope.layout   = response.data.Layout;
                 $scope.sections = response.data.Sections;
                 $scope.filename = $routeParams.id;
                 
+                //Create our ace editor
                 var editor = ace.edit(element);
 
+                //Set the mode of the editor
                 editor.getSession().setMode("ace/mode/html");
+
+                //Set the theme of the editor
+                editor.setTheme("ace/theme/github");
+
+                //Insert file contents from API into editor
                 editor.setValue($scope.contents);
+
+                //Insert cursor at line 1
                 editor.gotoLine(1);
 
+                //On any change to the editor update the scope value from the editor
                 editor.getSession().on('change', function () {
                     $scope.contents = editor.getSession().getValue();
                 });

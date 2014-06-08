@@ -1,7 +1,13 @@
 ﻿<style type="text/css" media="screen">
+    .editor-toolbar {
+        border-bottom: 1px solid #e8e8e8;
+        background-color: #f7f7f7;
+        padding: 5px;
+    }
+
     .ace-editor-item {
         position: absolute;
-        top: 0;
+        top: 42px;
         right: 0;
         bottom: 0;
         left: 0;
@@ -17,13 +23,12 @@
             <div class="span5">
                 <div class="btn-toolbar pull-right umb-btn-toolbar">
 
-                    <div class="btn-group">
+                    <!-- Save -->
+                    <button type="submit" data-hotkey="ctrl+s" class="btn btn-success pull-right" ng-click="saveView()">
+                        <localize key="buttons_save" class="ng-isolate-scope ng-scope">Save</localize>
+                    </button>
 
-                        <!-- Actions button that triggers dropdown -->
-                        <a class="btn" href="#" ng-click="getOptions()" prevent-default data-toggle="dropdown">
-                            <localize key="general_actions">Actions</localize>
-                            <span class="caret"></span>
-                        </a>
+                    <div class="btn-group">
 
                         <!-- Template/View Actions -->
                         <ul class="dropdown-menu  umb-actions" role="menu" aria-labelledby="dLabel">
@@ -65,10 +70,6 @@
                             </li>
                         </ul>
 
-                        <!-- Save -->
-                        <button type="submit" data-hotkey="ctrl+s" class="btn btn-success pull-right" ng-click="saveView()">
-                            <localize key="buttons_save" class="ng-isolate-scope ng-scope">Save</localize>
-                        </button>
                     </div>
 
                 </div>
@@ -76,6 +77,44 @@
         </div>
     </div>
     <div class="umb-panel-body">
+
+        <!-- Toolbar -->
+        <div class="editor-toolbar">
+            <div class="btn-group">
+                
+                <!-- Page Field -->
+                <button class="btn" ng-click="insertPageField()" title="Insert Page Field">
+                    <i class="icon icon-layout"></i>
+                </button>
+                
+                <!-- Macro -->
+                <button class="btn" ng-click="insertMacro()" title="Insert Macro">
+                    <i class="icon icon-layout"></i>
+                </button>
+                
+                <!-- Dictionary -->
+                <button class="btn" ng-click="insertDictionaryItem()" title="Insert Dictionary Item">
+                    <i class="icon icon-layout"></i>
+                </button>
+                
+                
+                <!-- Create Render Section -->
+                <button class="btn" ng-click="renderSection()" ng-hide="layout" title="Create Render Section">
+                    <i class="icon icon-layout"></i>
+                </button>
+                
+                <!-- Insert Section -->
+                <button class="btn" ng-click="implementSection()" ng-hide="!layout" title="Insert Section">
+                    <i class="icon icon-layout"></i>
+                </button>
+                
+                <!-- Insert RenderBody -->
+                <button class="btn" ng-click="renderBody()" ng-hide="layout" title="Insert Render Body">
+                    <i class="icon icon-layout"></i>
+                </button>
+            </div>
+        </div>
+
         <div class="ace-editor-item" ng-model="contents"></div>
     </div>
 </div>
