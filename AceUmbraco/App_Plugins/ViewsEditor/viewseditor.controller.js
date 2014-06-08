@@ -9,7 +9,7 @@
                 $scope.layout = response.data.Layout;
                 $scope.sections = response.data.Sections;
                 $scope.filename = $routeParams.id;
-
+                
                 var editor = ace.edit(element);
 
                 editor.getSession().setMode("ace/mode/html");
@@ -30,9 +30,15 @@
 
                     $http.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
 
+                    var parent = "";
+                    if ($routeParams.create) {
+                        parent = $routeParams.id;
+                    }
+
                     var data = $.param({
                         "FileName": $routeParams.id,
                         "NewFileName": $scope.filename,
+                        "Parent": parent,
                         "Value": jsonContents
                     });
 

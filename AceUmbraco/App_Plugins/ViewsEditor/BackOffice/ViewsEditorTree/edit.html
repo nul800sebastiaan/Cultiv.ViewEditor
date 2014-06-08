@@ -16,7 +16,7 @@
     <i class="medium icon-checkbox" title="Implement section" ng-click="implementSection()" ng-hide="!layout"></i>
     <i class="medium icon-document-dashed-line" title="Render body" ng-click="renderBody()" ng-hide="layout"></i>
     
-    <input type="text" name="fileName" ng-model="filename" />
+    <input type="text" name="fileName" ng-required="true" ng-model="filename" />
     <button type="submit" data-hotkey="ctrl+s" class="btn btn-success pull-right" ng-click="saveView()">
         <localize key="buttons_save" class="ng-isolate-scope ng-scope">Save</localize>
     </button>
