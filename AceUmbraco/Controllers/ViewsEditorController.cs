@@ -9,9 +9,6 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using Newtonsoft.Json;
-using Umbraco.Core.Models;
-using Umbraco.Core;
-using Umbraco.Core.Strings;
 using Umbraco.Web.WebApi;
 using File = System.IO.File;
 
@@ -86,6 +83,18 @@ namespace AceUmbraco.Controllers
         }
 
 
+        public HttpResponseMessage PutSaveFolder([FromBody] ViewFolder folder)
+        {
+            if (folder.FolderName.IsValidFolder() == false)
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+
+            Directory.CreateDirectory(folder.Parent == "-1"
+                ? HttpContext.Current.Request.MapPath("~/Views/" + folder.FolderName)
+                : HttpContext.Current.Request.MapPath("~/Views/" + folder.Parent + "/" + folder.FolderName));
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
+
         public HttpResponseMessage PutSaveView([FromBody]ViewFile view)
         {
             var ct = JsonConvert.DeserializeObject<string>(view.Value);
@@ -99,7 +108,7 @@ namespace AceUmbraco.Controllers
 
             if (filenameChanged && File.Exists(HttpContext.Current.Request.MapPath("~/Views/" + view.NewFileName)))
             {
-                return new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError);
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
 
             if (filenameChanged && view.FileName.IsValidViewFile() && view.NewFileName.IsValidViewFile())
@@ -127,7 +136,7 @@ namespace AceUmbraco.Controllers
                 }
             }
 
-            return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         internal string GetLayout(string contents)
@@ -184,6 +193,12 @@ namespace AceUmbraco.Controllers
         public bool Required { get; set; }
     }
 
+    public class ViewFolder
+    {
+        public string FolderName { get; set; }
+        public string Parent { get; set; }
+    }
+
     public class ViewFile
     {
         public string Value { get; set; }
@@ -201,6 +216,11 @@ namespace AceUmbraco.Controllers
         public static bool IsValidViewFile(this string path)
         {
             return path.EndsWith(".cshtml") && path.Contains("..") == false;
+        }
+
+        public static bool IsValidFolder(this string foldername)
+        {
+            return foldername.Contains("..") == false;
         }
     }
 

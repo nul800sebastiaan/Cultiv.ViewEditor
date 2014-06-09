@@ -210,7 +210,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\ViewsEditor\BackOffice\ViewsEditorTree\delete.html" />
+    <Content Include="App_Plugins\ViewsEditor\BackOffice\ViewsEditorTree\editfolder.html" />
     <Content Include="App_Plugins\ViewsEditor\Dialogs\sectionedit.html" />
+    <Content Include="App_Plugins\ViewsEditor\viewseditor.folder.controller.js" />
     <Content Include="App_Plugins\ViewsEditor\viewseditor.controller.js" />
     <Content Include="App_Plugins\ViewsEditor\BackOffice\ViewsEditorTree\create.html" />
     <Content Include="App_Plugins\ViewsEditor\viewseditor.sections.controller.js" />

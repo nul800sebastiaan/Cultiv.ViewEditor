@@ -1,0 +1,36 @@
+﻿<style type="text/css" media="screen">
+    .editor-toolbar {
+        border-bottom: 1px solid #e8e8e8;
+        background-color: #f7f7f7;
+        padding: 5px;
+    }
+
+    .ace-editor-item {
+        position: absolute;
+        top: 42px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+</style>
+<div ng-controller="ViewsEditor.Folder">
+    <div class="umb-panel-header">
+        <div class="row-fluid">
+            <div class="span7">
+                <umb-content-name placeholder="@placeholders_entername" ng-model="foldername" />
+            </div>
+
+            <div class="span5">
+                <div class="btn-toolbar pull-right umb-btn-toolbar">
+
+                    <!-- Save -->
+                    <button type="submit" data-hotkey="ctrl+s" class="btn btn-success pull-right" ng-click="saveFolder()">
+                        <localize key="buttons_save" class="ng-isolate-scope ng-scope">Save</localize>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</div>

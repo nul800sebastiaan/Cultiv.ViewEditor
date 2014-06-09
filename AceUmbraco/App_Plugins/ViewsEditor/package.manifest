@@ -1,6 +1,7 @@
 ﻿{
 	javascript: [
 		"~/App_Plugins/ViewsEditor/viewseditor.controller.js",
+		"~/App_Plugins/ViewsEditor/viewseditor.folder.controller.js",
 		"~/App_Plugins/ViewsEditor/viewseditor.sections.controller.js",
         "~/App_Plugins/ViewsEditor/viewseditor.dialog.delete.controller.js",
         "~/App_Plugins/ViewsEditor/viewseditor.resource.js",
