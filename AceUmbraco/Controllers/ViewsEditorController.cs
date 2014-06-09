@@ -63,19 +63,21 @@ namespace AceUmbraco.Controllers
             return contents;
         }
 
-        [HttpPost]
-        public HttpResponseMessage PostDeleteByPath(dynamic model)
+        public HttpResponseMessage GetDeleteByPath(string path)
         {
-            //Get the path to the file
-            var filePath = Path.Combine(HostingEnvironment.MapPath("~/views/"), model.path.ToString());
-
-            //Check file exists on disk - & hasn't been removed on disk by user
-            if (File.Exists(filePath))
+            if (path.IsValidViewFile())
             {
-                //Delete the file
-                File.Delete(filePath);
+                //Get the path to the file
+                var filePath = HttpContext.Current.Request.MapPath("~/Views/" + path);
 
-                return Request.CreateResponse(HttpStatusCode.OK);
+                //Check file exists on disk - & hasn't been removed on disk by user
+                if (File.Exists(filePath))
+                {
+                    //Delete the file
+                    File.Delete(filePath);
+
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
             }
 
             //File does not exist

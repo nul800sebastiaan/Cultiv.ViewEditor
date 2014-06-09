@@ -1,9 +1,9 @@
 ﻿function viewsEditorResource($q, $http, umbDataFormatter, umbRequestHelper) {
 	return {
 
-		deleteFile: function(path) {
+	    deleteFile: function (path) {
 		    return umbRequestHelper.resourcePromise(
-		        $http.post("/umbraco/backoffice/api/ViewsEditor/PostDeleteByPath", { path: path }),
+		        $http.get("/umbraco/backoffice/api/ViewsEditor/GetDeleteByPath?path=" + path),
                 'Failed to delete item ' + path);
 		}
     };
