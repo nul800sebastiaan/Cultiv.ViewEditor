@@ -1,4 +1,15 @@
-﻿angular.module("umbraco").controller("ViewsEditor", function ($scope, $routeParams, $http, $element, dialogService, notificationsService) {
+﻿angular.module("umbraco").controller("ViewsEditor", function ($scope, $routeParams, $http, $element, dialogService, notificationsService, navigationService) {
+
+    //The id of the node we are editing - aka the filename
+    var filePath = $routeParams.id;
+
+    //Check if the filePath contains folders '\'
+    //It's double \\ due to JS escaping
+    var filePathArray = filePath.split("\\");
+
+    //We are editing a file - sync the tree
+    navigationService.syncTree({ tree: 'ViewsEditorTree', path: [filePathArray], forceReload: true, activate: true });
+
 
     angular.forEach($element.find('.ace-editor-item'), function (element) {
         $http.get("/umbraco/backoffice/api/ViewsEditor/GetByPath/?path=" + $routeParams.id)
@@ -9,8 +20,8 @@
                 $scope.layout   = response.data.Layout;
                 $scope.sections = response.data.Sections;
                 $scope.filename = $routeParams.id;
-                $scope.create = $routeParams.create;
-                
+                $scope.create   = $routeParams.create;
+
                 //Create our ace editor
                 var editor = ace.edit(element);
 
