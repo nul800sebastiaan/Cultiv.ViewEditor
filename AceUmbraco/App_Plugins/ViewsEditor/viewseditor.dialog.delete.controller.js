@@ -27,4 +27,4 @@
 	};
 }
 
-angular.module("umbraco").controller("Cultiv.ViewsEditor.Dialog.Delete", ViewDeleteController);
+angular.module("umbraco").controller("ViewsEditor.Dialog.Delete", ViewDeleteController);

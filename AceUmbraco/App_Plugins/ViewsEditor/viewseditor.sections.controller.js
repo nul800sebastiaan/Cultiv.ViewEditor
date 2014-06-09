@@ -1,3 +1,3 @@
-﻿angular.module("umbraco").controller("Cultiv.ViewsEditor.Sections", function ($scope, $routeParams, $http, $element, dialogService, notificationsService) {
+﻿angular.module("umbraco").controller("ViewsEditor.Sections", function ($scope, $routeParams, $http, $element, dialogService, notificationsService) {
     
 });

@@ -1,4 +1,4 @@
-﻿angular.module("umbraco").controller("Cultiv.ViewsEditor", function ($scope, $routeParams, $http, $element, dialogService, notificationsService) {
+﻿angular.module("umbraco").controller("ViewsEditor", function ($scope, $routeParams, $http, $element, dialogService, notificationsService) {
 
     angular.forEach($element.find('.ace-editor-item'), function (element) {
         $http.get("/umbraco/backoffice/api/ViewsEditor/GetByPath/?path=" + $routeParams.id)

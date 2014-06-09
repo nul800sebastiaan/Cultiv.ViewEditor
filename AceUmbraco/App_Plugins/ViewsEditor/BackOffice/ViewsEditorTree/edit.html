@@ -13,7 +13,7 @@
         left: 0;
     }
 </style>
-<div ng-controller="Cultiv.ViewsEditor">
+<div ng-controller="ViewsEditor">
     <div class="umb-panel-header">
         <div class="row-fluid">
             <div class="span7">
@@ -39,15 +39,15 @@
                                 </a>
                             </li>
                             <li class="action">
-                                <a href="#" ng-click="insertMacro()" prevent-default>
-                                    <i class="icon icon-script"></i>
-                                    <span class="menu-label">Insert Macro</span>
-                                </a>
-                            </li>
-                            <li class="action">
                                 <a href="#" ng-click="insertDictionaryItem()" prevent-default>
                                     <i class="icon icon-book-alt-2"></i>
                                     <span class="menu-label">Insert Dictionary Item</span>
+                                </a>
+                            </li>
+                            <li class="action">
+                                <a href="#" ng-click="insertMacro()" prevent-default>
+                                    <i class="icon icon-script"></i>
+                                    <span class="menu-label">Insert Macro</span>
                                 </a>
                             </li>
                             <li class="action sep">
@@ -69,9 +69,7 @@
                                 </a>
                             </li>
                         </ul>
-
                     </div>
-
                 </div>
             </div>
         </div>
@@ -87,17 +85,16 @@
                     <i class="icon icon-autofill"></i>
                 </button>
                 
-                <!-- Macro -->
-                <button class="btn" ng-click="insertMacro()" title="Insert Macro">
-                    <i class="icon icon-brackets"></i>
-                </button>
-                
                 <!-- Dictionary -->
                 <button class="btn" ng-click="insertDictionaryItem()" title="Insert Dictionary Item">
                     <i class="icon icon-book-alt"></i>
                 </button>
                 
-                
+                <!-- Macro -->
+                <button class="btn" ng-click="insertMacro()" title="Insert Macro">
+                    <i class="icon icon-brackets"></i>
+                </button>
+
                 <!-- Create Render Section -->
                 <button class="btn" ng-click="renderSection()" ng-hide="layout" title="Create Render Section">
                     <i class="icon icon-layout"></i>
@@ -110,7 +107,7 @@
                 
                 <!-- Insert RenderBody -->
                 <button class="btn" ng-click="renderBody()" ng-hide="layout" title="Insert Render Body">
-                    <i class="icon icon-layout"></i>
+                    <i class="icon icon-document-dashed-line"></i>
                 </button>
             </div>
         </div>
