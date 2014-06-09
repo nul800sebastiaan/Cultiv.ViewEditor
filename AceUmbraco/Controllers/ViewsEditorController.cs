@@ -20,7 +20,7 @@ namespace AceUmbraco.Controllers
         {
             if (path == "-1" || path.EndsWith(".cshtml") == false)
             {
-                var scaffold = "@inherits UmbracoTemplatePage\r{\r\t// Specify a layout here\r\t// @Layout = \"Something.cshtml\"; \r}\r";
+                var scaffold = "@inherits UmbracoTemplatePage\r{\r\t\r}\r";
 
                 if (path.ToLowerInvariant().StartsWith("MacroPartials".ToLowerInvariant()))
                 {
