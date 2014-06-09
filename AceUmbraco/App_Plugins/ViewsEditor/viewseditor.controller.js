@@ -34,7 +34,7 @@
 
                 $scope.insertMacro = function () {
                     dialogService.macroPicker({ scope: $scope, callback: renderMacro });
-                }
+                };
 
                 $scope.saveView = function () {
                     var jsonContents = angular.toJson($scope.contents);
@@ -57,15 +57,15 @@
                     });
 
                     $http.put("/umbraco/backoffice/api/ViewsEditor/PutSaveView/", data)
-                        .error(function () {
-                            notificationsService.error("Something went wrong! Check your log in App_Data\Logs");
+						.error(function () {
+                            notificationsService.error("Something went wrong! Check your log in App_Data\\Logs");
                         })
-                        .success(function () {
+						.success(function () {
                             $scope.create = false;
                             $routeParams.id = $scope.filename;
                             notificationsService.success("View saved");
                         });
-                }
+                };
 
                 function renderMacro(data) {
                     var macroProperties = 0;
@@ -129,7 +129,7 @@
                     }
 
                     editor.insert(sectionCode);
-                }
+                };
 
                 $scope.implementSection = function () {
                     for (var section in $scope.sections) {
@@ -146,11 +146,11 @@
                 $scope.implementSectionConfirm = function (dialogData) {
                     var sectionCode = "@section " + dialogData.sectionName + " { \n\t@* Implement the section here *@ \n}";
                     editor.insert(sectionCode);
-                }
+                };
 
                 $scope.renderBody = function () {
                     editor.insert("@RenderBody()");
-                }
+                };
             });
     });
 });

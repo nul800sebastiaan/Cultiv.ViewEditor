@@ -9,10 +9,10 @@
 
         $http.put("/umbraco/backoffice/api/ViewsEditor/PutSaveFolder/", data)
             .error(function () {
-                notificationsService.error("Something went wrong! Check your log in App_Data\Logs");
+                notificationsService.error("Something went wrong! Check your log in App_Data\\Logs");
             })
             .success(function () {
                 notificationsService.success("Folder saved");
             });
-    }
+    };
 });
